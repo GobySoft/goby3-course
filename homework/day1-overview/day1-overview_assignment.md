@@ -126,7 +126,7 @@ goby3_course_topside_manager [2481-Apr-30 17:49:30.134870]: Received DCCL nav: v
 goby3_course_topside_manager [2481-Apr-30 17:49:30.139730]: ^^ Converts to frontseat NodeStatus: time: 16136041770 name: "USV_1" type: USV global_fix { lat: 41.59000026842395 lon: -70.709999548495745 depth: -0 } local_fix { x: 99.9 y: -262.3 z: 0 } pose { heading: 0 } speed { over_ground: 0 }
 ```
 
-Similarly, you can have any process write a log file with this debug information. Open `topside_config/manager.pb.cfg` in your favorite editor (`gedit`, `emacs`, `vi`), and change the following `glog_config` to `verbosity: VERBOSE` within the existing `app {}` block:
+Similarly, you can have any process write a log file with this debug information. Open `topside_config/manager.pb.cfg` in your favorite editor (`gedit`, `emacs`, `vi`), and add the following `glog_config` anywhere within the existing `app {}` block:
 
 ```
 app { 
