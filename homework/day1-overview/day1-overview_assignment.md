@@ -13,7 +13,7 @@ I've put together a video that walks through this process. You may want to watch
 [setup Youtube]: https://youtu.be/-nviOO8XXzg
 [setup download]: https://drive.google.com/u/1/uc?id=1VqgZXDbrLv8AKvG5fmrzSujbHNQ5G3HR&export=download
 
-The VM can be downloaded on [Google Drive][VM download]. The VM can be used with any virtual machine software than can open OVA files. If you don't already have a preference, VirtualBox (<https://www.virtualbox.org/>) is a decent cross-platform choice. VMWare Workstation Player 16 also seems to work fine (though you'll need to click "Retry" when it gives you a warning about the OVA file).
+The VM can be downloaded on [Google Drive][VM download]. The VM can be used with any virtual machine software that can open OVA files. If you don't already have a preference, VirtualBox (<https://www.virtualbox.org/>) is a decent cross-platform choice. VMWare Workstation Player 16 also seems to work fine (though you'll need to click "Retry" when it gives you a warning about the OVA file).
 
 [VM download]: https://drive.google.com/file/d/1uf5Ap1wfN1ejkPNv_bGMWaYVp_laDmN_/view
 
@@ -35,7 +35,7 @@ git pull
 ./build.sh
 ```
 
-The `goby3-course` repo contains all the code, launch files, and documentations specific to this course. Similarly, please update this:
+The `goby3-course` repo contains all the code, launch files, and documentation specific to this course. Similarly, please update this:
 
 ```
 cd ~/goby3-course
@@ -85,7 +85,7 @@ Ensure that you can see the vehicle on both viewers, and then click "Deploy" fro
 
 Note: pMarineViewer is showing the on-board position of the vehicle, whereas OpenCPN and Google Earth are showing the operator's view of the vehicle position after the (simulated) satellite comms. The pMarineViewer view can be thought of as simulator's "cheater mode" since you have access to a visualization you would not have out on the real water. While this can be useful while simulating and understanding a system, it is critical to separate this from the real viewer by the time you move to in-water tests.
 
-When you are done with the mission, you can type `<CTRL>+C` (SIGINT) in terminal windows where you run `./usv.launch` and `./topside.launch`. `goby_launch` will intercept the SIGINT and use `goby_terminate` to gracefully stop the goby processes, and SIGTERM to kill everything else (MOOS).
+When you are done with the mission, you can type `<CTRL>+C` (SIGINT) in the terminal windows where you ran `./usv.launch` and `./topside.launch`. `goby_launch` will intercept the SIGINT and use `goby_terminate` to gracefully stop the goby processes, and SIGTERM to kill everything else (MOOS).
 
 #### A side note on the Google Earth interface for Ocean Vehicles (GEOV)
 
@@ -126,7 +126,7 @@ goby3_course_topside_manager [2481-Apr-30 17:49:30.134870]: Received DCCL nav: v
 goby3_course_topside_manager [2481-Apr-30 17:49:30.139730]: ^^ Converts to frontseat NodeStatus: time: 16136041770 name: "USV_1" type: USV global_fix { lat: 41.59000026842395 lon: -70.709999548495745 depth: -0 } local_fix { x: 99.9 y: -262.3 z: 0 } pose { heading: 0 } speed { over_ground: 0 }
 ```
 
-Similarly, you can have any process write a log file with this debug information. Open `topside_config/manager.pb.cfg` in your favorite editor (`gedit`, `emacs`, `vi`), and add the following `glog_config` anywhere within the existing `app {}` block:
+Similarly, you can have any process write a log file with this debug information. Open `topside_config/manager.pb.cfg` in your favorite editor (`gedit`, `emacs`, `vi`), and change the following `glog_config` to `verbosity: VERBOSE` within the existing `app {}` block:
 
 ```
 app { 
@@ -151,7 +151,7 @@ If this file doesn't exist for you, ensure the process launched successfully. If
 
 #### A side note on glog output
 
-Generating the glog output can be fairly CPU intensive, especially on higher debug settings (DEBUG2, DEBUG2) and high time warp values. If you find your CPU is getting taxed by a particular process, try lowering the debug log output (e.g. to WARN or QUIET) and see if that helps.
+Generating the glog output can be fairly CPU intensive, especially on higher debug settings (DEBUG2, DEBUG3) and high time warp values. If you find your CPU is getting taxed by a particular process, try lowering the debug log output (e.g. to WARN or QUIET) and see if that helps.
 
 If your log directory gets cluttered, there's a script, `goby3-course/scripts/clean_logs.sh`, which will delete all the logs in `goby3-course/logs`.
 
@@ -242,8 +242,7 @@ If that's the case, try these fixes:
 
 - If your host has more CPU cores available than the VM (Machine->Settings->System in VirtualBox), try shutting down the VM and increase the CPU core count).
 - Try running Google Earth in the host, rather than the VM (see "A side note on the Google Earth interface for Ocean Vehicles (GEOV)", above).
-- Reduce the simulation "warp" speed (the factor faster than realtime that the simulation runs at). This is set in `~/goby3-course/launch/trail/config/common/sim.py` by changing the `warp=` value. Try reducing it by a factor of 2 (e.g. 20->10 or 10->5).
-- Reduce the number of AUVs in your simulation. To do this, edit `all.launch`, and change `goby3_course_n_auvs=` to the new number of vehicles on all lines, and then comment out (`#`) or remove all the `goby_launch -P auv.launch` lines with goby3_course_auv_index >= goby3_course_n_auvs).
+- Reduce the number of AUVs in your simulation and/or reduce the simulation "warp" speed (the factor faster than realtime that the simulation runs at). This can be done automatically using the `generate_all_launch.sh` script in `~/goby3-course/launch/trail` (you can `cat` this script if you want to see how to change these values manually in `all.launch` and `~/goby3-course/launch/trail/config/common/sim.py`). Usage: `./generate_all_launch.sh [number_of_AUVs] [warp_factor]`. The defaults for the Trail mission are set to 4 AUVs and warp 5, so try reducing the number of AUVs first, e.g., `./generate_all_launch.sh 2 5`.
 
 
 ## Wrap up
